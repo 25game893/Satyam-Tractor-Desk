@@ -1,0 +1,10 @@
+{
+  "name": "Satyam Tractor Desk",
+  "description": "A comprehensive management and billing system for tractor showrooms, featuring inventory tracking, customer enquiry, customer ledger, and advanced reporting.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

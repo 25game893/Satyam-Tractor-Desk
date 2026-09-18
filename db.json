@@ -1,0 +1,48 @@
+{
+  "tractors": [],
+  "tractorModels": [],
+  "customers": [],
+  "invoices": [],
+  "quotations": [],
+  "deliveryChallans": [],
+  "returnRequests": [],
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "role": "ADMIN",
+      "fullName": "System Administrator",
+      "password": "admin123",
+      "mobileNumber": "9098832111",
+      "permissions": [
+        "dashboard",
+        "inventory",
+        "customer-ledger",
+        "billing",
+        "customers",
+        "models",
+        "reports",
+        "logs",
+        "users",
+        "settings"
+      ]
+    }
+  ],
+  "showroomSettings": {
+    "id": "showroom",
+    "name": "Satyam Eicher Tractors",
+    "address": "Main Highway, Industrial Area, Punjab, India",
+    "phone": "+91 9876543210",
+    "email": "sales@satyameicher.com",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Eicher_logo.svg/1200px-Eicher_logo.svg.png",
+    "invoicePrefix": "SE",
+    "invoiceStartNumber": 1,
+    "challanStartNumber": 1,
+    "quotationStartNumber": 1,
+    "footerMessage": "Thank you for choosing Satyam Eicher. Powering your progress!",
+    "bankDetails": "HDFC BANK, IFSC: HDFC0001234",
+    "accountNumber": "50200012345678",
+    "isShopClosed": false
+  },
+  "activityLogs": []
+}

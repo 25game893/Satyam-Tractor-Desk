@@ -1,0 +1,262 @@
+{
+  "entities": {
+    "user": {
+      "title": "User",
+      "description": "User profile with role, full name, and feature permissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "role": { "type": "string", "enum": ["ADMIN", "STAFF"] },
+        "fullName": { "type": "string" },
+        "permissions": { "type": "array" }
+      },
+      "required": ["id", "username", "role", "fullName", "permissions"]
+    },
+    "tractorModel": {
+      "title": "TractorModel",
+      "description": "Tractor specifications including manufacturer, HP, description and key features",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "manufacturer": { "type": "string" },
+        "hp": { "type": "string" },
+        "description": { "type": "string" },
+        "features": { "type": "array" }
+      },
+      "required": ["id", "name", "manufacturer", "hp"]
+    },
+    "tractor": {
+      "title": "Tractor",
+      "description": "Physical tractor inventory with engine/chassis numbers, pricing, and status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "modelName": { "type": "string" },
+        "manufacturer": { "type": "string" },
+        "hp": { "type": "string" },
+        "engineNo": { "type": "string" },
+        "chassisNo": { "type": "string" },
+        "exShowroomPrice": { "type": "number" },
+        "status": { "type": "string", "enum": ["AVAILABLE", "SOLD", "RESERVED", "DELIVERED"] },
+        "color": { "type": "string" },
+        "hsnCode": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "modelName", "manufacturer", "hp", "engineNo", "chassisNo", "exShowroomPrice", "status"]
+    },
+    "customer": {
+      "title": "Customer",
+      "description": "Customer lead detail with contact information, location, interest, and status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "mobile": { "type": "string" },
+        "tehsil": { "type": "string" },
+        "village": { "type": "string" },
+        "sog": { "type": "string" },
+        "enquiryType": { "type": "string" },
+        "interestedModel": { "type": "string" },
+        "applicationUsage": { "type": "string" },
+        "interestedImplement": { "type": "string" },
+        "nextFollowupDays": { "type": "number" },
+        "expectedDeliveryDays": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "bankName": { "type": "string" },
+        "exchange": { "type": "string" },
+        "exchangeBrand": { "type": "string" },
+        "exchangeModel": { "type": "string" },
+        "exchangeYear": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "lastFollowupDate": { "type": "string" },
+        "status": { "type": "string" },
+        "salesDropReason": { "type": "string" },
+        "salesDropRemark": { "type": "string" },
+        "salesLostReason": { "type": "string" },
+        "salesLostRemark": { "type": "string" },
+        "followups": { "type": "array" }
+      },
+      "required": ["id", "name", "mobile", "tehsil", "village", "status", "createdAt"]
+    },
+    "invoice": {
+      "title": "Invoice",
+      "description": "Billing document for vehicle purchase with payment tracking and approval",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "invoiceNo": { "type": "string" },
+        "quotationId": { "type": "string" },
+        "date": { "type": "string" },
+        "customerId": { "type": "string" },
+        "tractorId": { "type": "string" },
+        "hypo": { "type": "string" },
+        "basicAmount": { "type": "number" },
+        "rtoAmount": { "type": "number" },
+        "insuranceAmount": { "type": "number" },
+        "accessoriesAmount": { "type": "number" },
+        "accessoriesDetail": { "type": "array" },
+        "otherCharges": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "discountStatus": { "type": "string", "enum": ["APPROVED", "PENDING", "REJECTED"] },
+        "approvalStatus": { "type": "string", "enum": ["APPROVED", "PENDING", "REJECTED"] },
+        "totalAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "paymentMode": { "type": "string" },
+        "status": { "type": "string", "enum": ["PAID", "PARTIAL", "DUE"] },
+        "notes": { "type": "string" },
+        "salesExecutive": { "type": "string" },
+        "placeOfSupply": { "type": "string" },
+        "payments": { "type": "array" }
+      },
+      "required": ["id", "invoiceNo", "quotationId", "date", "customerId", "tractorId", "basicAmount", "totalAmount", "paidAmount", "status", "approvalStatus", "discountStatus"]
+    },
+    "quotation": {
+      "title": "Quotation",
+      "description": "Sales quotation issued to leads",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "quotationNo": { "type": "string" },
+        "date": { "type": "string" },
+        "customerId": { "type": "string" },
+        "tractorId": { "type": "string" },
+        "hypo": { "type": "string" },
+        "basicAmount": { "type": "number" },
+        "rtoAmount": { "type": "number" },
+        "insuranceAmount": { "type": "number" },
+        "accessoriesAmount": { "type": "number" },
+        "accessoriesDetail": { "type": "array" },
+        "otherCharges": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "discountStatus": { "type": "string", "enum": ["APPROVED", "PENDING", "REJECTED"] },
+        "approvalStatus": { "type": "string", "enum": ["APPROVED", "PENDING", "REJECTED"] },
+        "totalAmount": { "type": "number" },
+        "validUntil": { "type": "string" },
+        "notes": { "type": "string" },
+        "salesExecutive": { "type": "string" }
+      },
+      "required": ["id", "quotationNo", "date", "customerId", "tractorId", "basicAmount", "totalAmount", "validUntil", "approvalStatus", "discountStatus"]
+    },
+    "deliveryChallan": {
+      "title": "DeliveryChallan",
+      "description": "Delivery confirmation challan with checklist",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "challanNo": { "type": "string" },
+        "date": { "type": "string" },
+        "invoiceId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "tractorId": { "type": "string" },
+        "hypo": { "type": "string" },
+        "deliveryAddress": { "type": "string" },
+        "deliveredBy": { "type": "string" },
+        "notes": { "type": "string" },
+        "exchangeValue": { "type": "number" },
+        "isExchangeConfirmed": { "type": "boolean" },
+        "approvalStatus": { "type": "string", "enum": ["APPROVED", "PENDING", "REJECTED"] },
+        "checklist": { "type": "object" }
+      },
+      "required": ["id", "challanNo", "date", "customerId", "tractorId", "checklist", "approvalStatus"]
+    },
+    "activityLog": {
+      "title": "ActivityLog",
+      "description": "Audit trail logs tracking user actions within the system",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "action": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "userId", "username", "action", "timestamp"]
+    },
+    "showroomSettings": {
+      "title": "ShowroomSettings",
+      "description": "Global showroom configurations, billing pre-requisites and status",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "bankDetails": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "logoUrl": { "type": "string" },
+        "invoicePrefix": { "type": "string" },
+        "invoiceStartNumber": { "type": "number" },
+        "challanStartNumber": { "type": "number" },
+        "quotationStartNumber": { "type": "number" },
+        "footerMessage": { "type": "string" },
+        "isShopClosed": { "type": "boolean" },
+        "closedAt": { "type": "string" }
+      },
+      "required": ["name", "address", "phone", "email", "bankDetails", "accountNumber", "invoicePrefix", "invoiceStartNumber", "challanStartNumber", "quotationStartNumber", "footerMessage"]
+    },
+    "returnRequest": {
+      "title": "ReturnRequest",
+      "description": "Tractor return request from customer, requiring administrative approval",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "requestId": { "type": "string" },
+        "date": { "type": "string" },
+        "tractorId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "invoiceId": { "type": "string" },
+        "reason": { "type": "string" },
+        "staffId": { "type": "string" },
+        "staffName": { "type": "string" },
+        "status": { "type": "string", "enum": ["APPROVED", "PENDING", "REJECTED"] },
+        "approvedAt": { "type": "string" },
+        "approvedBy": { "type": "string" }
+      },
+      "required": ["id", "requestId", "date", "tractorId", "customerId", "invoiceId", "reason", "staffId", "staffName", "status"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "user",
+      "description": "Collection of user profiles"
+    },
+    "tractorModels/{modelId}": {
+      "schema": "tractorModel",
+      "description": "Collection of tractor models available"
+    },
+    "tractors/{tractorId}": {
+      "schema": "tractor",
+      "description": "Collection of all physical tractors in inventory"
+    },
+    "customers/{customerId}": {
+      "schema": "customer",
+      "description": "Collection of customer leads and contact profiles"
+    },
+    "invoices/{invoiceId}": {
+      "schema": "invoice",
+      "description": "Billing invoices generated for tractor sales"
+    },
+    "quotations/{quotationId}": {
+      "schema": "quotation",
+      "description": "Quotations issued to customers"
+    },
+    "deliveryChallans/{challanId}": {
+      "schema": "deliveryChallan",
+      "description": "Delivery challans for sold/delivered vehicles"
+    },
+    "activityLogs/{logId}": {
+      "schema": "activityLog",
+      "description": "Audit trails for showroom operations"
+    },
+    "showroomSettings/{settingsId}": {
+      "schema": "showroomSettings",
+      "description": "Global settings for the Satyam Eicher Tractors showroom"
+    },
+    "returnRequests/{requestId}": {
+      "schema": "returnRequest",
+      "description": "Tractor sales return requests"
+    }
+  }
+}

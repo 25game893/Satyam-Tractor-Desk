@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-hw-bg: var(--hw-bg);
+  --color-hw-surface: var(--hw-surface);
+  --color-hw-border: var(--hw-border);
+  --color-hw-accent: var(--hw-accent);
+  --color-hw-accent-foreground: var(--hw-accent-foreground);
+  --color-hw-text: var(--hw-text);
+  --color-hw-muted: var(--hw-muted);
+  --color-hw-card-bg: var(--hw-card-bg);
+}
+
+:root {
+  --hw-bg: #FFFFFF;
+  --hw-surface: #FFFFFF;
+  --hw-border: #E5E7EB;
+  --hw-accent: #4682B4;
+  --hw-accent-foreground: #FFFFFF;
+  --hw-text: #1E293B;
+  --hw-muted: #64748B;
+  --hw-card-bg: #FFFFFF;
+  --hw-ring: rgba(70, 130, 180, 0.1);
+}
+
+.dark {
+  --hw-bg: #111827;
+  --hw-surface: #1E293B;
+  --hw-border: #334155;
+  --hw-accent: #70A1D7;
+  --hw-accent-foreground: #0F172A;
+  --hw-text: #F1F5F9;
+  --hw-muted: #94A3B8;
+  --hw-card-bg: #1E293B;
+  --hw-ring: rgba(112, 161, 215, 0.1);
+}
+
+@layer base {
+  body {
+    @apply antialiased bg-hw-bg text-hw-text selection:bg-hw-accent/10 selection:text-hw-text font-sans transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-hw-border rounded-full hover:bg-hw-muted/30 transition-colors;
+  }
+
+  .hw-card {
+    @apply bg-transparent border border-hw-border rounded-3xl shadow-sm hover:shadow-xl hover:shadow-hw-accent/5 hover:bg-hw-accent/[0.02] transition-all duration-500 relative overflow-hidden;
+  }
+  
+  .hw-border-dashed {
+    @apply border border-dashed border-hw-border;
+  }
+
+  .hw-label {
+    @apply text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-hw-muted;
+  }
+
+  .hw-value {
+    @apply font-sans font-extrabold tracking-tight;
+  }
+
+  .hw-glass {
+    @apply bg-hw-surface/70 backdrop-blur-xl border border-hw-border;
+  }
+
+  .hw-btn-primary {
+    @apply bg-hw-accent text-hw-accent-foreground px-6 py-3 rounded-2xl font-bold text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-hw-accent/10;
+  }
+
+  .hw-btn-secondary {
+    @apply bg-transparent text-hw-text border border-hw-border px-6 py-3 rounded-2xl font-bold text-sm transition-all hover:bg-hw-accent/5 hover:border-hw-accent/20 hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .hw-btn-ghost {
+    @apply text-hw-muted hover:text-hw-text hover:bg-hw-bg px-4 py-2 rounded-xl font-bold text-xs transition-all uppercase tracking-widest;
+  }
+
+  .hw-badge {
+    @apply px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all;
+  }
+}
+
+.hw-input {
+  @apply w-full px-5 py-3.5 bg-transparent border border-hw-border rounded-2xl focus:ring-4 focus:ring-hw-accent/5 focus:border-hw-accent outline-none transition-all text-hw-text font-semibold text-sm placeholder:text-hw-muted/40 hover:bg-hw-accent/[0.01];
+}
+
+/* Print Styles */
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  body { background: white !important; color: black !important; }
+  .hw-card { border: 1px solid #ddd !important; background: white !important; border-radius: 8px !important; }
+}

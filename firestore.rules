@@ -1,0 +1,210 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net (default deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- REUSABLE SECURITY PRIMITIVES ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "st3355316@gmail.com" ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- ENTITY SCHEMA VALIDATION BLUEPRINTS ---
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'username', 'role', 'fullName', 'permissions'])
+        && data.keys().size() >= 5
+        && data.id is string && data.id.size() <= 128
+        && data.username is string && data.username.size() <= 64
+        && data.fullName is string && data.fullName.size() <= 128
+        && data.role is string && (data.role == "ADMIN" || data.role == "STAFF")
+        && data.permissions is list;
+    }
+
+    function isValidTractorModel(data) {
+      return data.keys().hasAll(['id', 'name', 'manufacturer', 'hp'])
+        && data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128
+        && data.manufacturer is string && data.manufacturer.size() <= 128
+        && data.hp is string && data.hp.size() <= 64;
+    }
+
+    function isValidTractor(data) {
+      return data.keys().hasAll(['id', 'modelName', 'manufacturer', 'hp', 'engineNo', 'chassisNo', 'exShowroomPrice', 'status'])
+        && data.id is string && data.id.size() <= 128
+        && data.modelName is string && data.modelName.size() <= 128
+        && data.manufacturer is string && data.manufacturer.size() <= 128
+        && data.hp is string && data.hp.size() <= 64
+        && data.engineNo is string && data.engineNo.size() <= 128
+        && data.chassisNo is string && data.chassisNo.size() <= 128
+        && (data.exShowroomPrice is number || data.exShowroomPrice is int)
+        && data.status is string && (data.status == "AVAILABLE" || data.status == "SOLD" || data.status == "RESERVED" || data.status == "DELIVERED");
+    }
+
+    function isValidCustomer(data) {
+      return data.keys().hasAll(['id', 'name', 'mobile', 'tehsil', 'village', 'status', 'createdAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128
+        && data.mobile is string && data.mobile.size() <= 20
+        && data.tehsil is string && data.tehsil.size() <= 128
+        && data.village is string && data.village.size() <= 128
+        && data.status is string && data.status.size() <= 64;
+    }
+
+    function isValidInvoice(data) {
+      return data.keys().hasAll(['id', 'invoiceNo', 'quotationId', 'date', 'customerId', 'tractorId', 'basicAmount', 'totalAmount', 'paidAmount', 'status', 'approvalStatus', 'discountStatus'])
+        && data.id is string && data.id.size() <= 128
+        && data.invoiceNo is string && data.invoiceNo.size() <= 128
+        && data.quotationId is string && data.quotationId.size() <= 128
+        && data.customerId is string && data.customerId.size() <= 128
+        && data.tractorId is string && data.tractorId.size() <= 128
+        && (data.basicAmount is number || data.basicAmount is int)
+        && (data.totalAmount is number || data.totalAmount is int)
+        && (data.paidAmount is number || data.paidAmount is int)
+        && data.status is string && (data.status == "PAID" || data.status == "PARTIAL" || data.status == "DUE")
+        && data.approvalStatus is string && (data.approvalStatus == "APPROVED" || data.approvalStatus == "PENDING" || data.approvalStatus == "REJECTED")
+        && data.discountStatus is string && (data.discountStatus == "APPROVED" || data.discountStatus == "PENDING" || data.discountStatus == "REJECTED");
+    }
+
+    function isValidQuotation(data) {
+      return data.keys().hasAll(['id', 'quotationNo', 'date', 'customerId', 'tractorId', 'basicAmount', 'totalAmount', 'validUntil', 'approvalStatus', 'discountStatus'])
+        && data.id is string && data.id.size() <= 128
+        && data.quotationNo is string && data.quotationNo.size() <= 128
+        && data.customerId is string && data.customerId.size() <= 128
+        && data.tractorId is string && data.tractorId.size() <= 128
+        && (data.basicAmount is number || data.basicAmount is int)
+        && (data.totalAmount is number || data.totalAmount is int)
+        && data.approvalStatus is string && (data.approvalStatus == "APPROVED" || data.approvalStatus == "PENDING" || data.approvalStatus == "REJECTED")
+        && data.discountStatus is string && (data.discountStatus == "APPROVED" || data.discountStatus == "PENDING" || data.discountStatus == "REJECTED");
+    }
+
+    function isValidChallan(data) {
+      return data.keys().hasAll(['id', 'challanNo', 'date', 'customerId', 'tractorId', 'checklist', 'approvalStatus'])
+        && data.id is string && data.id.size() <= 128
+        && data.challanNo is string && data.challanNo.size() <= 128
+        && data.customerId is string && data.customerId.size() <= 128
+        && data.tractorId is string && data.tractorId.size() <= 128
+        && data.checklist is map
+        && data.approvalStatus is string && (data.approvalStatus == "APPROVED" || data.approvalStatus == "PENDING" || data.approvalStatus == "REJECTED");
+    }
+
+    function isValidLog(data) {
+      return data.keys().hasAll(['id', 'userId', 'username', 'action', 'timestamp'])
+        && data.id is string && data.id.size() <= 128
+        && data.userId is string && data.userId.size() <= 128
+        && data.username is string && data.username.size() <= 128
+        && data.action is string && data.action.size() <= 500;
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['name', 'address', 'phone', 'email', 'bankDetails', 'accountNumber', 'invoicePrefix', 'invoiceStartNumber', 'challanStartNumber', 'quotationStartNumber', 'footerMessage'])
+        && data.name is string && data.name.size() <= 128
+        && data.address is string && data.address.size() <= 500
+        && data.phone is string && data.phone.size() <= 20
+        && data.email is string && data.email.size() <= 128
+        && data.invoicePrefix is string && data.invoicePrefix.size() <= 10;
+    }
+
+    function isValidReturnRequest(data) {
+      return data.keys().hasAll(['id', 'requestId', 'date', 'tractorId', 'customerId', 'invoiceId', 'reason', 'staffId', 'staffName', 'status'])
+        && data.id is string && data.id.size() <= 128
+        && data.requestId is string && data.requestId.size() <= 128
+        && data.tractorId is string && data.tractorId.size() <= 128
+        && data.customerId is string && data.customerId.size() <= 128
+        && data.invoiceId is string && data.invoiceId.size() <= 128
+        && data.reason is string && data.reason.size() <= 500
+        && data.staffId is string && data.staffId.size() <= 128
+        && data.staffName is string && data.staffName.size() <= 128
+        && data.status is string && (data.status == "APPROVED" || data.status == "PENDING" || data.status == "REJECTED");
+    }
+
+    // --- COLLECTION RULE MATCHERS ---
+
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isValidUser(incoming()) && (isOwner(userId) || isAdmin());
+      allow update: if isSignedIn() && isValidUser(incoming()) && (isOwner(userId) || isAdmin()) && (incoming().role == existing().role || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /tractorModels/{modelId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() && isValidTractorModel(incoming());
+    }
+
+    match /tractors/{tractorId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && isValidTractor(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /customers/{customerId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && isValidCustomer(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /invoices/{invoiceId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && isValidInvoice(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /quotations/{quotationId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && isValidQuotation(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /deliveryChallans/{challanId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && isValidChallan(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /activityLogs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidLog(incoming());
+      allow update, delete: if false;
+    }
+
+    match /showroomSettings/{settingsId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() && isValidSettings(incoming());
+    }
+
+    match /returnRequests/{requestId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && isValidReturnRequest(incoming());
+      allow delete: if isAdmin();
+    }
+  }
+}
